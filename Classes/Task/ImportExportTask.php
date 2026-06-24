@@ -31,7 +31,8 @@ use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Taskcenter\Controller\TaskModuleController;
 use TYPO3\CMS\Taskcenter\TaskInterface;
 
@@ -57,7 +58,6 @@ class ImportExportTask implements TaskInterface
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $this->moduleUrl = (string)$uriBuilder->buildUriFromRoute('user_task');
         $this->taskObject = $taskObject;
-        $this->getLanguageService()->includeLLFile('EXT:taskcenter/Resources/Private/Language/locallang_csh.xlf');
     }
 
     /**
@@ -180,8 +180,12 @@ class ImportExportTask implements TaskInterface
     protected function renderLoadForm(int $id): string
     {
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename('EXT:taskcenter/Resources/Private/Templates/Task/ImportExport/Form.html');
+        $viewFactory = GeneralUtility::makeInstance(ViewFactoryInterface::class);
+        $viewFactoryData = new ViewFactoryData(
+            templatePathAndFilename: 'EXT:taskcenter/Resources/Private/Templates/Task/ImportExport/Form.html',
+            request: $GLOBALS['TYPO3_REQUEST'],
+        );
+        $view = $viewFactory->create($viewFactoryData);
         $view->assign('display', $id);
         $view->assign('returnUrl', $this->moduleUrl);
         $url = (string)$uriBuilder->buildUriFromRoute(
@@ -208,7 +212,7 @@ class ImportExportTask implements TaskInterface
         return $queryBuilder->select('*')
             ->from('tx_impexp_presets')
             ->where(
-                $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->or(
                     $queryBuilder->expr()->gt(
                         'public',
                         $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)

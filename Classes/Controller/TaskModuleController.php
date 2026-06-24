@@ -123,7 +123,6 @@ class TaskModuleController
         protected PageRenderer $pageRenderer,
         private readonly BackendViewFactory $backendViewFactory
     ) {
-        $this->getLanguageService()->includeLLFile('EXT:taskcenter/Resources/Private/Language/locallang_task.xlf');
         $this->MCONF = [
             'name' => $this->moduleName,
         ];

@@ -8,14 +8,14 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Friends of TYPO3',
     'author_email' => 'friendsof@typo3.org',
     'author_company' => '',
-    'version' => '12.1.0',
+    'version' => '13.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '12.4.24-13.9.99',
+            'typo3' => '14.0.0-14.99.99',
         ],
         'conflicts' => [],
         'suggests' => [
-            'sys_action' => '12.0.0-13.9.99',
+            'sys_action' => '14.0.0-14.99.99',
         ],
     ],
 ];
